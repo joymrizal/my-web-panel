@@ -13,8 +13,12 @@ export default function Register() {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Registrasi berhasil!");
       router.push("/dashboard");
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("An unknown error occurred");
+      }
     }
   };
 

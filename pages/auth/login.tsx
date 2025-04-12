@@ -12,10 +12,15 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      await logUserActivity(auth.currentUser?.uid ?? "unknown", "login");      alert("Login berhasil!");
+      await logUserActivity(auth.currentUser?.uid ?? "unknown", "login");
+      alert("Login berhasil!");
       router.push("/dashboard");
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("An unknown error occurred");
+      }
     }
   };
 
