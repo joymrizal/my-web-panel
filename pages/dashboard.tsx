@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { useRouter } from "next/router";
 import { logUserActivity } from "../lib/firebaseLog";
 import { ref, onValue } from "firebase/database";
 
 export default function Dashboard() {
-  const [user, setUser] = useState<any>(null);
-  const [plcStatus, setPlcStatus] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null); // Tipe user lebih spesifik
+  const [plcStatus, setPlcStatus] = useState<Record<string, boolean | string> | null>(null); // Tipe plcStatus lebih spesifik
   const router = useRouter();
 
   // Cek user login
