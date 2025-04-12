@@ -44,6 +44,11 @@ export default function Login() {
       <button className="bg-green-500 text-white px-4 py-2" onClick={handleLogin}>
         Login
       </button>
+
+      <p className="mt-4">
+        Belum punya akun?{" "}
+        <a href="/auth/register" className="text-blue-500">Daftar sekarang</a>
+      </p>
     </div>
   );
 }

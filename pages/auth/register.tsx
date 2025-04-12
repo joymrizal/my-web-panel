@@ -42,6 +42,11 @@ export default function Register() {
       <button className="bg-blue-500 text-white px-4 py-2" onClick={handleRegister}>
         Daftar
       </button>
+
+      <p className="mt-4">
+        Sudah punya akun?{" "}
+        <a href="/auth/login" className="text-blue-500">Login sekarang</a>
+      </p>
     </div>
   );
 }
