@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut, User as FirebaseUser } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { logUserActivity } from "@/lib/firebaseLog";
 import { ref, onValue, off } from "firebase/database";
 
+type PlcStatus = Record<string, string | boolean | number>;  // Definisikan tipe data untuk PLC_Status
+
 export default function Dashboard() {
-  const [user, setUser] = useState<any>(null);
-  const [plcStatus, setPlcStatus] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);  // Menambahkan loading state
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [plcStatus, setPlcStatus] = useState<PlcStatus | null>(null);  // Gunakan tipe PlcStatus
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   // Cek user login
@@ -23,7 +25,7 @@ export default function Dashboard() {
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);  // Menambahkan router ke dalam dependency array
 
   // Realtime listener PLC_Status
   useEffect(() => {
@@ -31,14 +33,14 @@ export default function Dashboard() {
     const unsubscribe = onValue(plcRef, (snapshot) => {
       const data = snapshot.val();
       setPlcStatus(data);
-      setLoading(false);  // Menandakan bahwa data sudah dimuat
+      setLoading(false);
     }, (error) => {
       console.error("Error fetching PLC Status:", error);
-      setLoading(false);  // Menyelesaikan loading meskipun ada error
+      setLoading(false);
     });
 
     return () => {
-      off(plcRef);  // Membersihkan listener saat komponen unmount
+      off(plcRef);
     };
   }, []);
 

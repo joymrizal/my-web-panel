@@ -15,13 +15,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
-      {/* Gambar Landing Page */}
-      <img
-        src="/path/to/your/image.jpg"
-        alt="Landing Page Image"
-        className="w-full h-auto max-w-4xl mb-8 rounded-md shadow-lg"
-      />
-
       {/* Teks Landing Page */}
       <h1 className="text-3xl font-bold mb-4 text-gray-800">Selamat Datang di Website Kami</h1>
       <p className="text-lg mb-8 text-gray-600">Platform yang mempermudah semua kebutuhan Anda. Daftar atau login untuk mulai.</p>
