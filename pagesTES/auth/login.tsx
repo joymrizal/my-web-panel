@@ -1,30 +1,27 @@
 import { useState } from "react";
 import { auth } from "../../lib/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/router";
+import { logUserActivity } from "../../lib/firebaseLog";
 
-export default function Register() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleRegister = async () => {
+  const handleLogin = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("Registrasi berhasil!");
+      await signInWithEmailAndPassword(auth, email, password);
+      await logUserActivity(auth.currentUser?.uid ?? "unknown", "login");      alert("Login berhasil!");
       router.push("/dashboard");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert("An unknown error occurred");
-      }
+    } catch (error: any) {
+      alert(error.message);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-      <h1 className="text-xl font-bold">Register</h1>
+      <h1 className="text-xl font-bold">Login</h1>
       <input
         type="email"
         placeholder="Email"
@@ -39,14 +36,9 @@ export default function Register() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button className="bg-blue-500 text-white px-4 py-2" onClick={handleRegister}>
-        Daftar
+      <button className="bg-green-500 text-white px-4 py-2" onClick={handleLogin}>
+        Login
       </button>
-
-      <p className="mt-4">
-        Sudah punya akun?{" "}
-        <a href="/auth/login" className="text-blue-500">Login sekarang</a>
-      </p>
     </div>
   );
 }

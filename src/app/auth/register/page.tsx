@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { auth } from "../../lib/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "next/router";
-import { logUserActivity } from "../../lib/firebaseLog";
+'use client';
 
-export default function Login() {
+import { useState } from "react";
+import { auth } from "@/lib/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
+
+export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      await logUserActivity(auth.currentUser?.uid ?? "unknown", "login");
-      alert("Login berhasil!");
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("Registrasi berhasil!");
       router.push("/dashboard");
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -24,9 +24,13 @@ export default function Login() {
     }
   };
 
+  const handleGoBack = () => {
+    router.push("/"); // Kembali ke landing page
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-      <h1 className="text-xl font-bold">Login</h1>
+      <h1 className="text-xl font-bold">Register</h1>
       <input
         type="email"
         placeholder="Email"
@@ -41,13 +45,17 @@ export default function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button className="bg-green-500 text-white px-4 py-2" onClick={handleLogin}>
-        Login
+      <button className="bg-blue-500 text-white px-4 py-2" onClick={handleRegister}>
+        Daftar
+      </button>
+
+      <button className="mt-4 text-blue-500" onClick={handleGoBack}>
+        Kembali ke Landing Page
       </button>
 
       <p className="mt-4">
-        Belum punya akun?{" "}
-        <a href="/auth/register" className="text-blue-500">Daftar sekarang</a>
+        Sudah punya akun?{" "}
+        <a href="/auth/login" className="text-blue-500">Login sekarang</a>
       </p>
     </div>
   );
