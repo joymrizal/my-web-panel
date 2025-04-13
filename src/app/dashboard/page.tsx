@@ -24,6 +24,7 @@ export default function Dashboard() {
         setUser(currentUser);
       }
     });
+    // Tidak perlu mengembalikan fungsi untuk unsubscribe di sini
   }, [router]);  // Menambahkan router ke dalam dependency array
 
   // Realtime listener PLC_Status
@@ -39,7 +40,7 @@ export default function Dashboard() {
     });
 
     return () => {
-      off(plcRef);
+      off(plcRef);  // Pastikan kita mematikan listener saat komponen di-unmount
     };
   }, []);
 
