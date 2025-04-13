@@ -17,14 +17,13 @@ export default function Dashboard() {
 
   // Cek user login
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
         router.push("/auth/login");
       } else {
         setUser(currentUser);
       }
     });
-    return () => unsubscribe();
   }, [router]);  // Menambahkan router ke dalam dependency array
 
   // Realtime listener PLC_Status
