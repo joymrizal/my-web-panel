@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { auth } from "@/lib/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -15,11 +15,11 @@ export default function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       alert("Login berhasil!");
       router.push("/dashboard");
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
-        alert(error.message);
+        alert(error.message);  // Menampilkan pesan error Firebase
       } else {
-        alert("An unknown error occurred");
+        alert("An unknown error occurred");  // Penanganan error yang tidak diketahui
       }
     }
   };

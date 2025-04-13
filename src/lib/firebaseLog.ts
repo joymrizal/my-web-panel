@@ -1,4 +1,3 @@
-// lib/firebaseLog.ts
 import { db } from "./firebase";
 import { ref, push } from "firebase/database";
 

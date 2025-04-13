@@ -5,11 +5,12 @@ import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { logUserActivity } from "@/lib/firebaseLog";
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, off } from "firebase/database";
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [plcStatus, setPlcStatus] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);  // Menambahkan loading state
   const router = useRouter();
 
   // Cek user login
@@ -30,9 +31,15 @@ export default function Dashboard() {
     const unsubscribe = onValue(plcRef, (snapshot) => {
       const data = snapshot.val();
       setPlcStatus(data);
+      setLoading(false);  // Menandakan bahwa data sudah dimuat
+    }, (error) => {
+      console.error("Error fetching PLC Status:", error);
+      setLoading(false);  // Menyelesaikan loading meskipun ada error
     });
 
-    return () => unsubscribe();
+    return () => {
+      off(plcRef);  // Membersihkan listener saat komponen unmount
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -50,7 +57,9 @@ export default function Dashboard() {
 
       <div className="bg-gray-100 p-4 rounded-lg shadow-md">
         <h2 className="font-semibold mb-2">Monitoring PLC Status:</h2>
-        {plcStatus ? (
+        {loading ? (
+          <p>Loading data...</p>
+        ) : plcStatus ? (
           <div className="grid grid-cols-2 gap-2 text-sm">
             {Object.entries(plcStatus).map(([key, value]) => (
               <div key={key} className="flex justify-between">
@@ -60,7 +69,7 @@ export default function Dashboard() {
             ))}
           </div>
         ) : (
-          <p>Loading data...</p>
+          <p>Data tidak ditemukan.</p>
         )}
       </div>
 

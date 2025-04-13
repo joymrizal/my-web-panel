@@ -6,18 +6,33 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 export default function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
+  // Fungsi untuk validasi email dan password
+  const validateInput = () => {
+    if (!email || !password) {
+      alert("Email dan Password tidak boleh kosong");
+      return false;
+    }
+    if (password.length < 6) {
+      alert("Password harus lebih dari 6 karakter");
+      return false;
+    }
+    return true;
+  };
+
   const handleRegister = async () => {
+    if (!validateInput()) return; // Pastikan input valid
+
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Registrasi berhasil!");
       router.push("/dashboard");
     } catch (error: unknown) {
       if (error instanceof Error) {
-        alert(error.message);
+        alert(error.message); // Menampilkan pesan error dari Firebase
       } else {
         alert("An unknown error occurred");
       }
