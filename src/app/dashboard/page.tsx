@@ -17,20 +17,22 @@ export default function Dashboard() {
 
   // Cek user login
   useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
         router.push("/auth/login");
       } else {
         setUser(currentUser);
       }
     });
-    // Tidak perlu mengembalikan fungsi untuk unsubscribe di sini
-  }, [router]);  // Menambahkan router ke dalam dependency array
+    
+    // Kembalikan fungsi untuk unsubscribe saat komponen unmount
+    return () => unsubscribeAuth();
+  }, [router]);
 
   // Realtime listener PLC_Status
   useEffect(() => {
     const plcRef = ref(db, "PLC_Status");
-    const unsubscribe = onValue(plcRef, (snapshot) => {
+    const unsubscribePlc = onValue(plcRef, (snapshot) => {
       const data = snapshot.val();
       setPlcStatus(data);
       setLoading(false);
@@ -39,9 +41,7 @@ export default function Dashboard() {
       setLoading(false);
     });
 
-    return () => {
-      off(plcRef);  // Pastikan kita mematikan listener saat komponen di-unmount
-    };
+    return () => off(plcRef);  // Pastikan kita mematikan listener saat komponen di-unmount
   }, []);
 
   const handleLogout = async () => {
